@@ -85,11 +85,12 @@ def submit_num_burst_times():
     global num_burst_times
     try:
         num_burst_times = int(entry_num_burst_times.get())
-        entry_num_burst_times.config(state=tk.DISABLED)
-        entry_burst_time.config(state=tk.NORMAL)
-        entry_arrival_time.config(state=tk.NORMAL)
-        btn_submit_burst_time.config(state=tk.NORMAL)
-        entry_burst_time.focus()
+        if num_burst_times>0:
+            entry_num_burst_times.config(state=tk.DISABLED)
+            entry_burst_time.config(state=tk.NORMAL)
+            entry_arrival_time.config(state=tk.NORMAL)
+            btn_submit_burst_time.config(state=tk.NORMAL)
+            entry_burst_time.focus()
     except ValueError:
         pass
 
@@ -98,35 +99,37 @@ def submit_burst_time():
     try:
         burst_time = int(entry_burst_time.get())
         arrival_time = int(entry_arrival_time.get())
-        if burst_time >= 0:
-            burst_times.append(burst_time)
-            arrival_times.append(arrival_time)
-            gnatt_time.append(burst_time)
-            gnatt_time.append([])
-            listbox_burst_times.insert(tk.END, f"Burst Time: {burst_time}, Arrival Time: {arrival_time}")
-            entry_burst_time.delete(0, tk.END)
-            entry_arrival_time.delete(0, tk.END)
-            entry_num_burst_times.config(state=tk.DISABLED)
-            if len(burst_times) == num_burst_times:
+        if burst_time>0 and arrival_time>=0:
+            if burst_time >= 0:
+                burst_times.append(burst_time)
+                arrival_times.append(arrival_time)
+                gnatt_time.append(burst_time)
+                gnatt_time.append([])
+                listbox_burst_times.insert(tk.END, f"Burst Time: {burst_time}, Arrival Time: {arrival_time}")
+                entry_burst_time.delete(0, tk.END)
+                entry_arrival_time.delete(0, tk.END)
+                entry_num_burst_times.config(state=tk.DISABLED)
+                if len(burst_times) == num_burst_times:
+                    entry_burst_time.config(state=tk.DISABLED)
+                    entry_arrival_time.config(state=tk.DISABLED)
+                    entry_quantum.config(state=tk.NORMAL)
+                    btn_submit_quantum.config(state=tk.NORMAL)
+                    entry_quantum.focus()
+            else:
                 entry_burst_time.config(state=tk.DISABLED)
                 entry_arrival_time.config(state=tk.DISABLED)
                 entry_quantum.config(state=tk.NORMAL)
                 btn_submit_quantum.config(state=tk.NORMAL)
                 entry_quantum.focus()
-        else:
-            entry_burst_time.config(state=tk.DISABLED)
-            entry_arrival_time.config(state=tk.DISABLED)
-            entry_quantum.config(state=tk.NORMAL)
-            btn_submit_quantum.config(state=tk.NORMAL)
-            entry_quantum.focus()
-        gnatt_time[1] = [0]
+            gnatt_time[1] = [0]
     except ValueError:
         pass
 
 def submit_quantum():
     global quantum
     quantum = int(entry_quantum.get())
-    run_round_robin()
+    if quantum>0:
+        run_round_robin()
 def plot_gantt_chart(processes):
     fig, ax = plt.subplots()
 
