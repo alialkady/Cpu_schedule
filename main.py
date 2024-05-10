@@ -257,6 +257,6 @@ result_label = tk.Label(root, text="")
 result_label.pack(padx=10, pady=10)
 
 root.mainloop()
-plot_gantt_chart(gnatt_time)
+#plot_gantt_chart(gnatt_time)
 print(gnatt_time)
 #print(burst_times)
