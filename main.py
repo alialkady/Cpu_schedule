@@ -5,27 +5,38 @@ import matplotlib.patches as mpatches
 def loop_burst(burst, gnatt, time):
     j = 1
     for i in range(len(burst)):
+        keep = False
         if burst[i] > 0:
             if burst[i] > quantum:
                 time += quantum
                 burst[i] = max(burst[i] - quantum, 0)
                 gnatt[j].append(time)
-                if(burst[i]!=0):
-                    check = False
-                    for k in range(len(burst)-1):
-                        if burst[k] ==0:
-                            check= True
-                        else:
-                            check=False
-                    if check==True:
-                        gnatt[j].append(time)
 
                 if i == len(burst) - 1 and burst[0] != 0:
                     gnatt[1].append(time)
                 elif i == len(burst) - 1 and burst[0] == 0:
-                    pass
-                elif burst[i + 1] == 0:
-                    pass
+                    for k in range(len(burst) - 1):
+                        if burst[k] != 0:
+                            gnatt[k + 1].append(time)
+                            break
+                elif burst[i+1]==0:
+                  #  print(gnatt[i + 1])
+                    for x in range(i+1,len(burst)):
+
+                        if burst[x]!=0:
+
+                            gnatt[x+(x+1)].append(time)
+                            keep = True
+                            break
+                    if  keep == False:
+                        for x in range(len(burst)):
+
+                            if burst[x] != 0:
+                                gnatt[x + (x + 1)].append(time)
+                                break
+
+
+
                 else:
                     gnatt[j + 2].append(time)
             else:
@@ -35,13 +46,32 @@ def loop_burst(burst, gnatt, time):
                 if i == len(burst) - 1 and burst[0] != 0:
                     gnatt[1].append(time)
                 elif i == len(burst) - 1 and burst[0] == 0:
-                    pass
-                elif burst[i + 1] == 0:
-                    pass
+                    for k in range(len(burst) - 1):
+                        if burst[k] != 0:
+                            gnatt[k + 1].append(time)
+                            break
+                elif burst[i+1]==0:
+                   # print(gnatt[i+1])
+                    for x in range(i+1,len(burst)):
+                        if burst[x]!=0:
+
+                            gnatt[x+(x+1)].append(time)
+                            keep = True
+                            break
+                    if  keep == False:
+                        for x in range(len(burst)):
+
+                            if burst[x] != 0:
+                                gnatt[x + (x + 1)].append(time)
+                                break
+
+
                 else:
                     gnatt[j + 2].append(time)
         j += 2
     return time
+
+
 
 def run_round_robin():
     global time_counter
@@ -99,7 +129,7 @@ def submit_burst_time():
     try:
         burst_time = int(entry_burst_time.get())
         arrival_time = int(entry_arrival_time.get())
-        if burst_time>0 and arrival_time>=0:
+        if burst_time>0 and arrival_time>=0 and burst_time>= arrival_time:
             if burst_time >= 0:
                 burst_times.append(burst_time)
                 arrival_times.append(arrival_time)
@@ -139,6 +169,7 @@ def plot_gantt_chart(processes):
     # Plotting processes
     labels = []
     colors = []
+    y = 0  # Constant y value for all bars
     for i in range(0, len(processes), 2):
         burst_time = processes[i]
         time_range = processes[i + 1]
@@ -152,15 +183,16 @@ def plot_gantt_chart(processes):
         for j in range(0, len(time_range), 2):
             start_time = time_range[j]
             end_time = time_range[j + 1]
-            ax.barh(i // 2, end_time - start_time, left=start_time, height=0.5, color=color, alpha=0.8,edgecolor="black")
+            ax.barh(y, end_time - start_time, left=start_time, height=0.5, color=color, edgecolor="black")
 
     # Setting x-axis label
     ax.set_xlabel('Time')
 
     # Creating custom legend with process numbers
-    custom_legend = [mpatches.Patch(color=color, label=f'{label}: Process {i // 2}') for i, (color, label) in
+    custom_legend = [mpatches.Patch(color=color, label=f'{label}') for i, (color, label) in
                      enumerate(zip(colors, labels))]
-    ax.legend(handles=custom_legend, loc='upper right', bbox_to_anchor=(1.2, 1))
+
+    ax.legend(handles=custom_legend)
 
     plt.show()
 burst_times = []
@@ -215,6 +247,6 @@ result_label = tk.Label(root, text="")
 result_label.pack(padx=10, pady=10)
 
 root.mainloop()
-print(gnatt_time)
 plot_gantt_chart(gnatt_time)
-
+print(gnatt_time)
+#print(burst_times)
