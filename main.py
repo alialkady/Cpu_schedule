@@ -95,12 +95,22 @@ def run_round_robin():
         result_text += "Burst times after this round of scheduling: {}\n".format(burst_times)
 
     for i in range(1,len(gnatt_time),2):
-        turn_around.append(gnatt_time[i][-1]-arrival_times[counter])
-        response_time.append(gnatt_time[i][0]-arrival_times[counter])
+
+        if gnatt_time[i][-1]-arrival_times[counter]>0:
+            turn_around.append(gnatt_time[i][-1]-arrival_times[counter])
+        else:
+            turn_around.append(0)
+        if gnatt_time[i][0]-arrival_times[counter]>0:
+             response_time.append(gnatt_time[i][0]-arrival_times[counter])
+        else:
+            response_time.append(0)
         counter+=1
     for i in range(len(turn_around)):
         turn_around_result+= turn_around[i]
-        waiting_time.append(turn_around[i] - burst_times_copy[i])
+        if(turn_around[i] - burst_times_copy[i]>0):
+            waiting_time.append(turn_around[i] - burst_times_copy[i])
+        else:
+            waiting_time.append(0)
         waiting_time_result+=waiting_time[i]
         response_time_result+= response_time[i]
 
