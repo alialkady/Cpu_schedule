@@ -15,9 +15,11 @@ def loop_burst(burst, gnatt, time):
                 if i == len(burst) - 1 and burst[0] != 0:
                     gnatt[1].append(time)
                 elif i == len(burst) - 1 and burst[0] == 0:
-                    for k in range(len(burst) - 1):
+                    for k in range(len(burst)):
+                      #  print(k)
                         if burst[k] != 0:
-                            gnatt[k + 1].append(time)
+
+                            gnatt[k + (k + 1)].append(time)
                             break
                 elif burst[i+1]==0:
                   #  print(gnatt[i + 1])
@@ -46,10 +48,16 @@ def loop_burst(burst, gnatt, time):
                 if i == len(burst) - 1 and burst[0] != 0:
                     gnatt[1].append(time)
                 elif i == len(burst) - 1 and burst[0] == 0:
-                    for k in range(len(burst) - 1):
+                    for k in range(len(burst)):
+                       # print(k)
                         if burst[k] != 0:
-                            gnatt[k + 1].append(time)
+                            print(k)
+                            gnatt[k + (k + 1)].append(time)
                             break
+                           # (4,5,10) 2
+                            #[0, [0, 4], 0, [4, 9], 10, [9, 15, 19]] 2+3
+                            #0+1
+                            #1+2
                 elif burst[i+1]==0:
                    # print(gnatt[i+1])
                     for x in range(i+1,len(burst)):
@@ -257,6 +265,7 @@ result_label = tk.Label(root, text="")
 result_label.pack(padx=10, pady=10)
 
 root.mainloop()
-#plot_gantt_chart(gnatt_time)
-print(gnatt_time)
+#print(gnatt_time)
+plot_gantt_chart(gnatt_time)
+
 #print(burst_times)
